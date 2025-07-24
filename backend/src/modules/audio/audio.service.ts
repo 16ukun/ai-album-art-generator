@@ -23,9 +23,8 @@ export class AudioService {
         headers: form.getHeaders(),
       });
       // I think I'll use an object here to maintain the shape of the response
-      this.logger.log(
-        `Generated prompt: ${this.generatePrompt(response.data)}`,
-      );
+      const prompt = await this.generatePrompt(response.data);
+      this.logger.log(`Generated prompt: ${prompt}`);
       return response.data;
     } catch (error) {
       this.logger.error('Failed to call analyzer', error.message);
@@ -35,7 +34,7 @@ export class AudioService {
     }
   }
 
-  private generatePrompt(audoAnalysis: AudioAnalysis): string {
+  private async generatePrompt(audoAnalysis: AudioAnalysis): Promise<string> {
     return this.promptEngine.generatePrompt(audoAnalysis);
   }
 }
