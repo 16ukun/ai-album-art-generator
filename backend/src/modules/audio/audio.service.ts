@@ -1,6 +1,9 @@
+import { ImageGeneratorService } from './../../image-generator/image-generator.service';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import * as FormData from 'form-data';
+// import * as FormData from 'form-data';
+import FormData from 'form-data';
+
 import {
   AudioAnalysis,
   PromptEngine,
@@ -10,6 +13,7 @@ import {
 export class AudioService {
   private logger = new Logger(AudioService.name);
   private promptEngine = new PromptEngine();
+  private imageGeneratorService = new ImageGeneratorService();
 
   async sendToAnalyzer(file: Express.Multer.File) {
     const form = new FormData();
@@ -25,7 +29,9 @@ export class AudioService {
       // I think I'll use an object here to maintain the shape of the response
       const prompt = await this.generatePrompt(response.data);
       this.logger.log(`Generated prompt: ${prompt}`);
-      return response.data;
+
+      const imageURL = this.imageGeneratorService.generateImage(prompt);
+      return { prompt, imageURL };
     } catch (error) {
       this.logger.error('Failed to call analyzer', error.message);
       if (error.response) {
