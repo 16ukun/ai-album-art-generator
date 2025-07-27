@@ -10,7 +10,9 @@ export type AudioAnalysis = {
 
 export class PromptEngine {
   async generatePrompt(analysis: AudioAnalysis): Promise<string> {
+    // const prompt = `You are a creative assistant. Based on the audio analysis below, generate a vivid, imaginative description for an album cover. Genre: ${analysis.genre}, Mood: ${analysis.mood}, Key: ${analysis.key}, Tempo: ${analysis.bpm} BPM, Energy: ${analysis.energy}. Describe the scene in a way that an AI image generator could use to create a cover art.`;
     const prompt = `You are a creative assistant. Based on the audio analysis below, generate a vivid, imaginative description for an album cover. Genre: ${analysis.genre}, Mood: ${analysis.mood}, Key: ${analysis.key}, Tempo: ${analysis.bpm} BPM, Energy: ${analysis.energy}. Describe the scene in a way that an AI image generator could use to create a cover art.`;
+
     try {
       const response = await axios.post(
         'https://api.together.xyz/v1/chat/completions',
@@ -19,8 +21,7 @@ export class PromptEngine {
           messages: [
             {
               role: 'system',
-              content:
-                'You are a helpful assistant that writes creative, vivid prompts for image generation.',
+              content: `You are a helpful assistant that writes short, vivid prompts (1-2 sentences max) for AI image generators like Stable Diffusion. Avoid paragraphs or titles.`,
             },
             {
               role: 'user',
