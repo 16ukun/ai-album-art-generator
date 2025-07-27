@@ -6,6 +6,7 @@ services:
       - "3000:3000"
     volumes:
       - ./backend:/app
+      - ./images:app/images
     restart: always
 
   analyzer:
